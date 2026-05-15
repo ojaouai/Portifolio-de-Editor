@@ -14,6 +14,7 @@ import thumbUgc from "@/assets/thumb-ugc.jpg";
 import thumbTiktok from "@/assets/thumb-tiktok.jpg";
 import thumbFacebook from "@/assets/thumb-facebook.jpg";
 import thumbYoutube from "@/assets/thumb-youtube.jpg";
+export default Index;
 
 export const Route = createFileRoute("/")({
   component: Index,
