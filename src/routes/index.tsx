@@ -32,11 +32,9 @@ const categories = ["Todos", "VSL", "UGC", "TikTok Ads", "Facebook Ads", "YouTub
 
 const projects = [
   { title: "Suplemento — VSL Long Form", category: "VSL", img: thumbVsl2, metric: "ROAS 4.8x" },
-  { title: "Skincare UGC Hook", category: "UGC", img: thumbUgc, metric: "62% retenção" },
-  { title: "TikTok Native Ad", category: "TikTok Ads", img: thumbTiktok, metric: "1.2M views" },
-  { title: "Curso Online VSL", category: "VSL", img: thumbVsl, metric: "8.3% CTR" },
-  { title: "E-commerce Catalog", category: "Facebook Ads", img: thumbFacebook, metric: "CPA -41%" },
-  { title: "Mentoria — YouTube Ad", category: "YouTube Ads", img: thumbYoutube, metric: "11M views" },
+  { title: "Skincare UGC Hook", category: "UGC", thumbnail: "https://img.youtube.com/vi/iewV2ckAxNM/maxresdefault.jpg", video: "https://www.youtube.com/embed/iewV2ckAxNM", metric: "62% retenção" },
+  { title: "TikTok Native Ad", category: "TikTok Ads", thumbnail: "https://img.youtube.com/vi/iSY0yQAposE/maxresdefault.jpg", video: "https://www.youtube.com/embed/iSY0yQAposE", metric: "1.2M views" },
+  { title: "E-commerce Catalog", category: "Facebook Ads", thumbnail: "https://img.youtube.com/vi/j_D8wPQ3nvI/maxresdefault.jpg", video: "https://www.youtube.com/embed/j_D8wPQ3nvI", metric: "CPA -41%" },
 ];
 
 const stats = [
@@ -263,6 +261,7 @@ function Stats() {
 
 function Portfolio() {
   const [filter, setFilter] = useState<typeof categories[number]>("Todos");
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const filtered = filter === "Todos" ? projects : projects.filter(p => p.category === filter);
 
   return (
@@ -292,24 +291,56 @@ function Portfolio() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((p, i) => (
-            <ProjectCard key={p.title} project={p} index={i} />
+            <ProjectCard key={p.title} project={p} index={i} onOpen={setSelectedVideo} />
           ))}
-        </div>
+        
+</div>
+
+{selectedVideo && (
+  <div
+    className="fixed inset-0 z-[999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4"
+    onClick={() => setSelectedVideo(null)}
+  >
+    <div
+      className="relative w-full max-w-5xl aspect-video bg-black border border-primary"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <button
+        onClick={() => setSelectedVideo(null)}
+        className="absolute -top-12 right-0 text-white text-sm uppercase tracking-widest"
+      >
+        Fechar ✕
+      </button>
+
+      <iframe
+        src={`${selectedVideo}?autoplay=1`}
+        className="w-full h-full"
+        allow="autoplay; encrypted-media"
+        allowFullScreen
+        style={{ border: "none" }}
+      />
+    </div>
+  </div>
+)}
       </div>
     </section>
   );
 }
 
-function ProjectCard({ project, index }: { project: typeof projects[number]; index: number }) {
+function ProjectCard({ project, index, onOpen }: { project: typeof projects[number]; index: number; onOpen: (videoUrl: string | null) => void }) {
   const isVertical = ["TikTok Ads", "UGC"].includes(project.category) || index % 3 === 1;
+
   return (
-    <article className={`group relative overflow-hidden bg-background border border-border hover:border-primary/60 transition-all duration-500 hover:red-glow ${isVertical ? "aspect-[4/5]" : "aspect-video"}`}>
+    <article onClick={() => onOpen(project.video ?? null)}
+    className={`group relative overflow-hidden bg-background border border-border hover:border-primary/60 transition-all duration-500 hover:red-glow ${isVertical ? "aspect-[4/5]" : "aspect-video"}`}>
+      {/* VÍDEO OU IMAGEM */}
       <img
-        src={project.img}
-        alt={project.title}
-        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        loading="lazy"
-      />
+  src={project.thumbnail || project.img}
+  alt={project.title}
+  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+  loading="lazy"
+/>
+
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-90 group-hover:opacity-70 transition" />
 
       {/* Play button */}
