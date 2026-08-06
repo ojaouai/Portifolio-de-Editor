@@ -1,0 +1,43 @@
+name: Update Counter
+
+on:
+  schedule:
+    # Executa todos os dias às 12:00 UTC
+    - cron: "0 12 * * *"
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositório
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar script
+        run: python update_counter.py
+
+      - name: Configurar Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit
+        run: |
+          git add counter.txt
+
+          git diff --cached --quiet && exit 0
+
+          git commit -m "Atualiza contador"
+
+      - name: Push
+        run: git push
