@@ -23,9 +23,9 @@ jobs:
         with:
           python-version: "3.12"
 
-	- name: Executar script
- 	 working-directory: .github/atualizacao_do_port
- 	 run: python update_counter.py
+      - name: Executar script
+        working-directory: .github/atualizacao_do_port
+        run: python update_counter.py
 
       - name: Configurar Git
         run: |
@@ -34,7 +34,7 @@ jobs:
 
       - name: Commit
         run: |
-          git add counter.txt
+          git add .github/atualizacao_do_port/counter.txt
 
           git diff --cached --quiet && exit 0
 
