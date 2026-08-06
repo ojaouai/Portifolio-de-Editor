@@ -1,6 +1,6 @@
 from pathlib import Path
 
-counter = Path(__file__).parent / "counter.txt"
+counter = Path("counter.txt")
 
 if not counter.exists():
     counter.write_text("0")
